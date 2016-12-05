@@ -3,7 +3,7 @@ function test() {
     const nameTest = "TEST-CLUSTER";
 
     function clusterMap() {
-        return api.clustersList()
+        return api.clustersList().data
                 .reduce(function(prev, curr) {prev[curr.name] = curr; return prev;}, {});
     }
 
