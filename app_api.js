@@ -10,19 +10,19 @@ function () {
         request.headers["X-Auth-Token"] = api.token;
     }
     function url(suffix) {
-        return api.host + "/ui/api/" + suffix;
+        var host = api.host;
+        if(host[host.length - 1] == '/') {
+            host = host.substring(0, host.length - 1);
+        }
+        return host + "/ui/api/" + suffix;
     }
-    function makeGet(urlSrc) {
+    function make(method, req) {
         return function () {
-            var suffix;
-            if(typeof urlSrc === 'function') {
-                suffix = urlSrc.apply(this, arguments);
-            } else {
-                suffix = urlSrc;
-            }
             var request = {
-                url: url(suffix)
+                method: method,
             };
+            var args = Array.prototype.concat.apply([request], arguments);
+            req.apply(this, args);
             reqInterceptor(request);
             var resp = http.execute(request);
             return resp.data;
@@ -38,7 +38,11 @@ function () {
         console.debug(" * Login with token: ", resp.data.key);
         return api.token = resp.data.key;
     };
-    api.clustersList = makeGet("clusters/");
-    api.clusterNodesDetailed = makeGet(function (cluster) {return "clusters/" + cluster + "/nodes-detailed";});
+    api.clustersList = make("GET", function(r){r.url = url("clusters/")});
+    api.clusterNodesDetailed = make("GET", function (r, cluster) {r.url = url("clusters/" + cluster + "/nodes-detailed");});
+    api.clusterCreate = make("PUT", function(r, cluster, data) {
+        r.url = url("clusters/" + cluster);
+        r.body = data;
+    });
     return api;
 }
