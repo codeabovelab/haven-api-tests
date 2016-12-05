@@ -8,6 +8,16 @@ function () {
             request.headers = {};
         }
         request.headers["X-Auth-Token"] = api.token;
+        request.onResponse = function (req, resp) {
+            if(resp.code < 400) {
+                return;
+            }
+            var message = resp.message;
+            if(!message && resp.data && resp.data.message) {
+                message = resp.data.message;
+            }
+            console.error(req.url, "return error:", resp.code, message);
+        };
     }
     function url(suffix) {
         var host = api.host;
