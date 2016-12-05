@@ -42,7 +42,7 @@ function () {
     api.clusterNodesDetailed = make("GET", function (r, cluster) {r.url = url("clusters/" + cluster + "/nodes-detailed");});
     api.clusterCreate = make("PUT", function(r, cluster, data) {
         r.url = url("clusters/" + cluster);
-        r.body = data;
+        r.data = data;
     });
     api.clusterDelete = make("DELETE", function(r, cluster) {r.url = url("clusters/" + cluster)});
     return api;
