@@ -15,13 +15,16 @@ function test() {
     }
 
     function clusterCreate(cluster, data) {
+        console.debug("Check that" + cluster + "not exists.");
         var clusters = clusterMap();
         var ourCluster =  clusters[cluster];
         console.assert(!clusters[cluster], "Cluster with ", cluster, " already exists!");
+        console.debug("Create cluster:", cluster);
         api.clusterCreate(cluster, data);
     }
 
     function clear() {
+        console.debug("Clean...");
         api.clusterDelete(nameTest);
     }
 
@@ -31,11 +34,13 @@ function test() {
 
         clusterCreate(ourClusterName, {title: ourClusterTitle});
 
+        console.debug("Check that", ourClusterName, "is exists");
         var ourCluster = clusterGet(ourClusterName);
         console.assert(!!ourCluster, "Cluster with ", ourClusterName, " is not exists!");
         console.assert(ourCluster.title === ourClusterTitle, "Cluster with ", ourClusterName,
             " has unexpected title: ", ourCluster.title);
 
+        console.debug("Delete", ourClusterName);
         api.clusterDelete(ourClusterName);
 
     }
@@ -45,6 +50,7 @@ function test() {
 
         clusterCreate(ourClusterName);
 
+        console.debug("Check that", ourClusterName, "is not exists");
         var cluster = clusterGet(ourClusterName);
         console.assert(!cluster, "Cluster with bad name: ", ourClusterName, " is created!");
     }
