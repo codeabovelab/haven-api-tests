@@ -2,13 +2,8 @@ var api = include("app_api");
 function test() {
     const nameTest = "TEST-CLUSTER";
 
-    function clusterMap() {
-        return api.clustersList().data
-                .reduce(function(prev, curr) {prev[curr.name] = curr; return prev;}, {});
-    }
-
     function clusterGet(cluster) {
-        var clusters = clusterMap();
+        var clusters = api.clusterMap();
         var tmp = clusters[cluster];
         console.debug("Load cluster", cluster, ": ", tmp);
         return tmp;
@@ -16,7 +11,7 @@ function test() {
 
     function clusterCreate(cluster, data) {
         console.debug("Check that" + cluster + "not exists.");
-        var clusters = clusterMap();
+        var clusters = api.clusterMap();
         var ourCluster =  clusters[cluster];
         console.assert(!clusters[cluster], "Cluster with ", cluster, " already exists!");
         console.debug("Create cluster:", cluster);

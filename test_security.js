@@ -2,6 +2,7 @@ function test() {
     const api = include("app_api");
     const assert = include("utils").assert;
     const nameCluster = "SC-test-cluster";
+    const defaultClusters = ["all","orphans"];
     const userAdmin = {
         user: "TestAdmin",
         title: "Cluster admin",
@@ -86,11 +87,27 @@ function test() {
 
     userCreate(userOne);
     // grant ACL on cluster to userOne
+    var res = api.acl("CLUSTER/" + nameCluster, {
+        "entries": [
+            {
+                "id":"1",
+                "sid": {
+                    "type": "PRINCIPAL",
+                    "principal": userOne.user,
+                    "tenant": userOne.tenant
+                },
+                "granting": true,
+                "permission": "CRUDEA"
+            }
+        ]
+    });
+    console.assert(res.code === 200, "Can not update acl");
 
     //test delete
     userDelete(userOne.user);
     //create again
     userCreate(userOne);
+    // acl for this user must be remained
 
     userCreate(userTwo);
     // none to grant
@@ -100,14 +117,25 @@ function test() {
 
     //login as userOne,
     userLogin(userOne);
-
     //check access
+    {
+        var clusters = api.clustersMap();
+        var clusterNames = Object.keys(clusters);
+        console.assert(clusterNames.length == (defaultClusters.length + 1) && clusterNames.indexOf(nameCluster) >= 0,
+            "User ", userOne.user, "has invalid access to clusters:", clusterNames);
+    }
     api.logout();
 
 
     //login as userTwo
     userLogin(userTwo);
     //check access
+    {
+        var clusters = api.clustersMap();
+        var clusterNames = Object.keys(clusters);
+        console.assert(clusterNames.length == defaultClusters.length, "User ", userTwo.user,
+            "has invalid access to clusters:", clusterNames);
+    }
     api.logout();
 
     clear();

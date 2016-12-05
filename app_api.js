@@ -51,6 +51,10 @@ function () {
         api.token = null;
     };
     api.clustersList = make("GET", function(r) {r.url = url("clusters/")});
+    api.clustersMap = function clusterMap() {
+        return api.clustersList().data
+            .reduce(function(prev, curr) {prev[curr.name] = curr; return prev;}, {});
+    };
     api.clusterNodesDetailed = make("GET", function (r, cluster) {r.url = url("clusters/" + cluster + "/nodes-detailed");});
     api.clusterCreate = make("PUT", function(r, cluster, data) {
         r.url = url("clusters/" + cluster);
@@ -64,5 +68,9 @@ function () {
         r.data = data;
     });
     api.userDelete = make("DELETE", function(r, user) {r.url = url("users/" + user)});
+    api.acl = make("POST", function(r, id, data) {
+        r.url = url("acl/" + id);
+        r.data = data;
+    });
     return api;
 }
