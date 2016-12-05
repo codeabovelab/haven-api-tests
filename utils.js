@@ -45,7 +45,7 @@ function () {
         }
         simpleCompare("", left, right, args);
         if(errors.length > 0) {
-            console.error(args.message || "", errors.join('\n'));
+            console.assert(false, args.message || "", errors.join('\n'));
         }
     };
     var utils = {assert:{}};
