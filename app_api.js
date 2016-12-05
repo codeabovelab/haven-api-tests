@@ -44,5 +44,6 @@ function () {
         r.url = url("clusters/" + cluster);
         r.body = data;
     });
+    api.clusterDelete = make("DELETE", function(r, cluster) {r.url = url("clusters/" + cluster)});
     return api;
 }
