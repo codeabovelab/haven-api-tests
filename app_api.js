@@ -77,6 +77,7 @@ function () {
     api.jobCreate = make("POST", function(r, data) {
         r.url = url("jobs/");
         r.data = data;
-    })
+    });
+    api.jobDelete = make("DELETE", function(r, job) {r.url = url("jobs/" + job)});
     return api;
 }

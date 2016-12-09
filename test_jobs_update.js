@@ -2,12 +2,19 @@ var api = include("app_api");
 function test() {
     api.host = process.env.API_HOST;
     var clusterName = "job-test-cluster";
+    var jobId;
 
     console.debug("api.host:", api.host);
     api.login("admin", "password");
 
     //clean
-    api.clusterDelete(clusterName);
+    function clean() {
+        api.clusterDelete(clusterName);
+        if(jobId) {
+            var res = api.jobDelete(jobId);
+            console.assert(res.code == 200, "Can not delete job: ", res.message)
+        }
+    }
     api.clusterCreate(clusterName, {title: "cluster for test updates"});
 
     var params = {
@@ -36,6 +43,7 @@ function test() {
     var job = res.data;
     console.debug("After run:", job);
     if(job.status === 'COMPLETED') {
+        clean();
         return;
     }
     var jobId = job.id;
@@ -49,4 +57,5 @@ function test() {
         console.debug("Message of latest record of log:", latest.message);
         console.assert(false, "Test failed");
     }
+    clean();
 }
