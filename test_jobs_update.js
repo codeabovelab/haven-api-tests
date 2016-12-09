@@ -24,7 +24,8 @@ function test() {
                         to: "latest"
                     }
                 ]
-            }
+            },
+            random: new Date().getTime()
         }
     }
 
@@ -32,8 +33,14 @@ function test() {
     // but we test job instantiation an parameters deserialization
     var res = api.jobCreate(params);
     console.assert(res.code == 200, "JOB: can not be scheduled");
-    console.debug("After run:", res.data);
-    var jobId = res.data.id;
+    var job = res.data;
+    console.debug("After run:", job);
+    if(job.status === 'COMPLETED') {
+        return;
+    }
+    var jobId = job.id;
+    //do something with below ugly thing
+    java.lang.Thread.sleep(3000);
     var job = api.job(jobId).data
     console.debug("Later:", job);
     if(job.status === 'FAILED_JOB') {
