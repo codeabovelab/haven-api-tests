@@ -72,5 +72,11 @@ function () {
         r.url = url("acl/" + id);
         r.data = data;
     });
+    api.job = make("GET", function(r, job) {r.url = url("jobs/" + job)});
+    api.jobLog = make("GET", function(r, job) {r.url = url("jobs/" + job + "/log")});
+    api.jobCreate = make("POST", function(r, data) {
+        r.url = url("jobs/");
+        r.data = data;
+    })
     return api;
 }
