@@ -10,7 +10,7 @@ function test() {
     }
 
     function clusterCreate(cluster, data) {
-        console.debug("Check that" + cluster + "not exists.");
+        console.debug("Check that", cluster, "not exists.");
         var clusters = api.clustersMap();
         var ourCluster =  clusters[cluster];
         console.assert(!clusters[cluster], "Cluster with ", cluster, " already exists!");
