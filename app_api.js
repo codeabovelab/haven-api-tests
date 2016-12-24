@@ -1,13 +1,6 @@
 function () {
     var api = {};
     function reqInterceptor(request) {
-        if(!api.token) {
-            return;
-        }
-        if(!request.headers) {
-            request.headers = {};
-        }
-        request.headers["X-Auth-Token"] = api.token;
         request.onResponse = function (req, resp) {
             if(resp.code < 400) {
                 return;
@@ -18,6 +11,13 @@ function () {
             }
             console.error(req.method, req.url, "return error:", resp.code, resp.message);
         };
+        if(!api.token) {
+            return;
+        }
+        if(!request.headers) {
+            request.headers = {};
+        }
+        request.headers["X-Auth-Token"] = api.token;
     }
     function url(suffix) {
         var host = api.host;
@@ -43,7 +43,9 @@ function () {
             url: api.host + "/ui/token/login",
             data: { username:name, password:password }
         };
+        reqInterceptor(request);
         var resp = http.execute(request);
+        console.assert(resp.code < 400, "Can not login, see above log.");
         console.debug("Login as", resp.data.userName, "with token: ", resp.data.key);
         return api.token = resp.data.key;
     };
