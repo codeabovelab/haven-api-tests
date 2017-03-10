@@ -18,10 +18,10 @@
     "labels": {
       "label.label": "testvalue"
     },
-    "cpuShares": 100000,
+    "cpuPeriod": 100000,
     "cpuQuota": 200000,
-    "memoryLimit": null,
-    "memoryReservation": null,
+    "memoryLimit": "2GiB",
+    "memoryReservation": "1GiB",
     "imageId": "sha256:52af198afd8c264f1035206ca66a5c48e602afb32dc912ebf9e9478134601ec4",
     "environment": [
       "TEST=1",
