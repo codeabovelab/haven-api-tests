@@ -1,3 +1,4 @@
+const utils = include("utils");
 var api = include("app_api");
 function test() {
     const clusterName = "TEST-CLUSTER";
@@ -59,5 +60,9 @@ function test() {
     console.debug("Create service result: ", res);
     var createdService = api.service(clusterName, serviceName).data;
     console.debug("Get service result: ", createdService);
+    utils.assert.equal(serviceSource, createdService, {
+        message: "Service source not same:",
+        skip:[]
+    })
     clear();
 }

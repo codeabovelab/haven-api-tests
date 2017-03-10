@@ -1,11 +1,27 @@
 function () {
+/*
+Usage:
+    const assert = include("utils").assert;
+    assert.equal(expected, actual, {
+                message: "User '" + name + "' is not same:\n",
+                skip:["password"]
+            });
+*/
     function compare(left, right, args) {
         if(args === undefined) {
             args = {};
         }
         var errors = [];
         var visited = [];
-        function simpleCompare(path, left, right) {
+        function compareObjects(path, left, right) {
+            if(left === null || right === null ||
+               typeof left !== 'object' || typeof right !== 'object') {
+                if(left !== right) {
+                    errors.push("different '" + path + "': expected=" + left
+                    + " but actual=" + right);
+                }
+                return;
+            }
             if(visited.indexOf(left) >= 0) {
                 return;
             }
@@ -29,26 +45,17 @@ function () {
                 var key = keys[i];
                 var expected = left[key];
                 var actual = right[key];
-                if(typeof expected === 'object' && typeof actual === 'object') {
-                    var prefix = key;
-                    if(isArray) {
-                        prefix = path + "[" + key + "]";
-                    } else if(path) {
-                        prefix = path + "." + key;
-                    }
-                    simpleCompare(prefix, expected, actual);
-                } else if(expected !== actual) {
-                    errors.push("different '" + key + "': expected=" + expected
-                    + " but actual=" + actual);
-                }
+                var prefix = path + (isArray? "[" + key + "]" : "." + key);
+                compareObjects(prefix, expected, actual);
             }
         }
-        simpleCompare("", left, right, args);
+        compareObjects("", left, right);
         if(errors.length > 0) {
             console.assert(false, args.message || "", errors.join('\n'));
         }
     };
     var utils = {assert:{}};
     utils.assert.equal = compare;
+    Object.freeze(utils);
     return utils;
 }
