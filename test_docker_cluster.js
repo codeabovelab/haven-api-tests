@@ -1,6 +1,7 @@
 var api = include("app_api");
 function test() {
-    const nameTest = "TEST-CLUSTER";
+    const clusterName = "TEST-CLUSTER";
+    const serviceName = "ping-service";
     const managerNode = "docker-exp";
 
     function clusterGet(cluster) {
@@ -21,11 +22,14 @@ function test() {
 
     function clear() {
         console.debug("Clean...");
-        api.clusterDelete(nameTest);
+        console.debug("Delete service: ", serviceName);
+        api.serviceDelete(clusterName, serviceName);
+        console.debug("Delete cluster: ", clusterName);
+        api.clusterDelete(clusterName);
     }
 
-    function testCreate() {
-        var ourClusterName = nameTest;
+    function createCluster() {
+        var ourClusterName = clusterName;
         var ourClusterTitle = "TEST TITLE";
 
         clusterCreate(ourClusterName, {
@@ -40,9 +44,6 @@ function test() {
         console.assert(ourCluster.title === ourClusterTitle, "Cluster with ", ourClusterName,
             " has unexpected title: ", ourCluster.title);
 
-        console.debug("Delete", ourClusterName);
-        api.clusterDelete(ourClusterName);
-
     }
 
     api.host = process.env.API_HOST;
@@ -50,5 +51,13 @@ function test() {
     api.login("admin", "password");
 
     clear();
-    testCreate();
+    createCluster();
+    var serviceSource = JSON.parse(io.load("./docker_cluster/ping-service.json"));
+    serviceSource.name = serviceName;
+    console.debug("Create service '", serviceName, " with follow sources: ", serviceSource);
+    var res = api.serviceCreate(clusterName, serviceSource).data;
+    console.debug("Create service result: ", res);
+    var createdService = api.service(clusterName, serviceName).data;
+    console.debug("Get service result: ", createdService);
+    clear();
 }

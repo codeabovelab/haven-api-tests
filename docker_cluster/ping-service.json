@@ -1,0 +1,67 @@
+{
+  "name": "ping-1",
+  "cluster": "TEST-CLUSTER",
+  "labels": {
+    "woooho": "yes"
+  },
+  "ports": [
+    {
+      "privatePort": 80,
+      "publicPort": 8080,
+      "type": "tcp",
+      "mode": "ingress"
+    }
+  ],
+  "constraints": [],
+  "container":{
+    "image": "debian",
+    "labels": {
+      "label.label": "testvalue"
+    },
+    "cpuShares": 100000,
+    "cpuQuota": 200000,
+    "memoryLimit": null,
+    "memoryReservation": null,
+    "imageId": "sha256:52af198afd8c264f1035206ca66a5c48e602afb32dc912ebf9e9478134601ec4",
+    "environment": [
+      "TEST=1",
+      "ENV=some"
+    ],
+    "mounts": [
+      {
+        "type": "tmpfs",
+        "source": null,
+        "target": "/test",
+        "readonly": false,
+        "size": 0,
+        "mode": 0
+      },
+      {
+        "type": "bind",
+        "source": "/tmp",
+        "target": "/root",
+        "readonly": false,
+        "propagation": null
+      }
+    ],
+    "command": [
+      "/bin/ping",
+      "-i",
+      "1",
+      "127.0.0.1"
+    ],
+    "dns": [
+      "4.4.4.4",
+      "8.8.8.8"
+    ],
+    "network": "default",
+    "networks": [
+      "ingress"
+    ],
+    "extraHosts": [
+      "one:127.0.0.1",
+      "two:127.0.0.1"
+    ],
+    "securityOpt": []
+  }
+}

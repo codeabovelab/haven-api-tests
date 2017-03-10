@@ -81,5 +81,16 @@ function () {
         r.data = data;
     });
     api.jobDelete = make("DELETE", function(r, job) {r.url = url("jobs/" + job)});
+
+    api.serviceCreate = make("POST", function(r, cluster, data) {
+        r.url = url("services/create?cluster=" + cluster);
+        r.data = data;
+    });
+    api.serviceUpdate = make("POST", function(r, cluster, id, data) {
+        r.url = url("services/update?cluster=" + cluster + "&id=" + id);
+        r.data = data;
+    });
+    api.service = make("GET", function(r, cluster, id) {r.url = url("services/get?cluster=" + cluster + "&id=" + id)});
+    api.serviceDelete = make("POST", function(r, cluster, id) {r.url = url("services/delete?cluster=" + cluster + "&id=" + id)});
     return api;
 }
