@@ -21,7 +21,10 @@ To run the tests:
 
 ```sh
 export API_HOST=http://172.31.0.3:8761/ 
-java -jar "$PATH_TO_JSTEREST/jsterest.jar" -t ./ main
+java -jar "$PATH_TO_JSTEREST/jsterest.jar" -t ./ main 
+
+# folow modules create and delete test data: test_cluster test_security test_docker_cluster 
+# also has destructive tests:  test_jobs_update
 ```
 
-Note that some test can modify cluster data. 
+Note that some tests can modify cluster data. Destructive tests may destroy or broken existed clusters, therefore runt it allowed only on test environment.
