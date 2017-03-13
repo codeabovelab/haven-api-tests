@@ -2,6 +2,7 @@ const utils = include("utils");
 var api = include("app_api");
 function test() {
     const clusterName = "TEST-CLUSTER";
+    const networkName = "test-network";
     const serviceName = "ping-service";
     const managerNode = "docker-exp";
 
@@ -25,6 +26,7 @@ function test() {
         console.debug("Clean...");
         console.debug("Delete service: ", serviceName);
         api.serviceDelete(clusterName, serviceName);
+        api.networkDelete(clusterName, networkName);
         console.debug("Delete cluster: ", clusterName);
         api.clusterDelete(clusterName);
     }
@@ -53,6 +55,7 @@ function test() {
 
     clear();
     createCluster();
+    api.networkCreate(clusterName, networkName);
     var serviceSource = JSON.parse(io.load("./docker_cluster/ping-service.json"));
     serviceSource.name = serviceName;
     console.debug("Create service '", serviceName, " with follow sources: ", serviceSource);
