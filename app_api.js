@@ -64,7 +64,7 @@ function () {
     });
     api.clusterDelete = make("DELETE", function(r, cluster) {r.url = url("clusters/" + cluster)});
     api.user = make("GET", function(r, user) {r.url = url("users/" + user)});
-    api.userCurrent = make("GET", function(r, user) {r.url = url("users-current")});
+    api.userCurrent = make("GET", function(r, user) {r.url = url("users/current/")});
     api.userUpdate = make("POST", function(r, user, data) {
         r.url = url("users/" + user);
         r.data = data;
