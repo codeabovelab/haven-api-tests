@@ -56,6 +56,20 @@ Usage:
     };
     var utils = {assert:{}};
     utils.assert.equal = compare;
+    utils.wait = function(func, arg) {
+        arg = arg || {};
+        let interval = arg.interval || 1;
+        let time = arg.time || 10;
+        let tries = Math.round(time / interval) || 1;
+        for(var i = 0; i < tries; ++i) {
+            let res = func();
+            if(res) {
+                return res;
+            }
+            java.lang.Thread.sleep(interval * 1000);
+        }
+        return null;
+    };
     Object.freeze(utils);
     return utils;
 }

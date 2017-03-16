@@ -49,13 +49,34 @@ function test() {
 
     }
 
+    function checkNetwork(name) {
+        let net = api.network(clusterName, name).data;
+        console.debug("The network '", name,"' is :", net);
+        console.assert(!!net, "Can not get network '", name,"' ");
+    }
+
+    function createNetwork(name) {
+        let netId = api.networkCreate(clusterName, name).data.id;
+        console.debug("Created net '", name, "' with id:", netId);
+        console.assert(!!netId, "Can not create network '", name,"' ");
+        checkNetwork(name);
+    }
+
     api.host = process.env.API_HOST;
     console.debug("api.host:", api.host);
     api.login("admin", "password");
 
     clear();
     createCluster();
-    api.networkCreate(clusterName, networkName);
+    createNetwork(networkName);
+    {
+        let net = utils.wait(function() {
+            let code = api.network(clusterName, clusterName).code;
+            return code === 200 ;
+        }, {interval: 5, time: 30})
+        console.assert(!!net, "Can not load cluster embedded network: ", clusterName);
+    }
+
     var serviceSource = JSON.parse(io.load("./docker_cluster/ping-service.json"));
     serviceSource.name = serviceName;
     console.debug("Create service '", serviceName, " with follow sources: ", serviceSource);

@@ -93,6 +93,7 @@ function () {
     api.service = make("GET", function(r, cluster, id) {r.url = url("services/get?cluster=" + cluster + "&id=" + id)});
     api.serviceDelete = make("POST", function(r, cluster, id) {r.url = url("services/delete?cluster=" + cluster + "&id=" + id)});
 
+    api.network = make("GET", function(r, cluster, id) {r.url = url("networks/get?cluster=" + cluster + "&network=" + id)});
     api.networkCreate = make("POST", function(r, cluster, network, data) {
         r.url = url("networks/create?cluster=" + cluster + "&network=" + network);
         r.data = data;
